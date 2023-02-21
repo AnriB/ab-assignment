@@ -8,3 +8,14 @@ variable "region" {
   default = "us-east-1"
 }
 
+# EC2 instance type to create
+variable "instance-type" {
+  type    = string
+  default = "t3.micro"
+}
+
+# Number of K8S workers
+variable "worker-count" {
+  type    = number
+  default = 2
+}
