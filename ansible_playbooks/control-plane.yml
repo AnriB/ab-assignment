@@ -4,7 +4,41 @@
   remote_user: ec2-user
   become_user: root
   tasks:
+    # server update 
     - name: Updating OS
       yum:
         name: "*"
         state: latest
+    
+    # installing docker + additional require packages
+    - name: required packages
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+    
+    - name: adding docker repository to yum
+      yum_repository:
+        name: docker-ce-stable
+        description: configuring yum for docker
+        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        enabled: yes
+
+    - name: install docker
+      yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+    
+    - name: start and enable docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
