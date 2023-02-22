@@ -19,12 +19,17 @@ resource "aws_instance" "control-plane" {
   instance_type               = var.instance-type
   key_name                    = aws_key_pair.control-key.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.all_instances.id]
+  vpc_security_group_ids      = [aws_security_group.control_plane_sg.id]
   subnet_id                   = aws_subnet.subnet_1.id
   tags = {
     Name = "control_plane_instance"
   }
-
+  #  provisioner "local-exec" {
+  #    command = <<EOF
+  #aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  #ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/control-plane.yml
+  #EOF
+  #  }
 }
 
 # Creates EC2 instances running the k8s workers
@@ -35,10 +40,16 @@ resource "aws_instance" "workers" {
   instance_type               = var.instance-type
   key_name                    = aws_key_pair.control-key.key_name
   associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.all_instances.id]
+  vpc_security_group_ids      = [aws_security_group.workers_sg.id]
   subnet_id                   = aws_subnet.subnet_2.id
   tags = {
     Name = join("_", ["worker_instance", count.index + 1])
   }
   depends_on = [aws_instance.control-plane]
+  #  provisioner "local-exec" {
+  #    command = <<EOF
+  #aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  #ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/workers.yml
+  #EOF
+  #  }
 }
