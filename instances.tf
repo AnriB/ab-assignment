@@ -24,12 +24,12 @@ resource "aws_instance" "control-plane" {
   tags = {
     Name = "control_plane_instance"
   }
-  #  provisioner "local-exec" {
-  #    command = <<EOF
-  #aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
-  #ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/control-plane.yml
-  #EOF
-  #  }
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/control-plane.yml -v > /var/log/control-plane.log
+  EOF
+  }
 }
 
 # Creates EC2 instances running the k8s workers
@@ -46,10 +46,10 @@ resource "aws_instance" "workers" {
     Name = join("_", ["worker_instance", count.index + 1])
   }
   depends_on = [aws_instance.control-plane]
-  #  provisioner "local-exec" {
-  #    command = <<EOF
-  #aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
-  #ansible-playbook --extra-vars 'passed_in_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/workers.yml
-  #EOF
-  #  }
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/workers.yml -v > /var/log/worker.log
+  EOF
+  }
 }
