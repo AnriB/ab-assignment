@@ -74,7 +74,7 @@
     
     - name: systctl
       shell: sysctl -p
-      
+
     - name: initialize the control-plane
       command: kubeadm init
     
@@ -85,15 +85,17 @@
     - name: import join command
       copy:
         content: "{{ join_command.stdout }}"
-        dest: /tmp/worker_join_command.sh
-
+        dest: /worker_join_command
     - name: copy file to local machine
       fetch:
-        src: /tmp/worker_join_command.sh
-        dest: /tmp/worker_join_command.sh
+        src: /worker_join_command
+        dest: /tmp/worker_join_command
 
     - name: enabling user to use kubernetes
-      shell: export KUBECONFIG=/etc/kubernetes/admin.conf
+      command: "{{ item }}"
+      with_items:
+        - mkdir -p $HOME/.kube
+        - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
     - name: install k8s cni plugin
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
