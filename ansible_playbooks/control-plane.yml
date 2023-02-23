@@ -88,13 +88,7 @@
         remote_src: yes
 
     - name: enabling user to use kubernetes
-      command: "{{ item }}"
-      with_items:
-      - mkdir -p $HOME/.kube
-      - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-
-    - name: changing ownership
-      command: chown $(id --user):$(id --group) $HOME/.kube/config
-
+      shell: export KUBECONFIG=/etc/kubernetes/admin.conf
+      
     - name: install k8s cni plugin
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
