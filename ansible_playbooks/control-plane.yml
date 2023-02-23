@@ -86,8 +86,10 @@
         src: /tmp/worker_join_command.sh
         dest: /tmp/worker_join_command.sh
         remote_src: yes
-    - name: 
-      command:
+
+    - name: enabling user to use kubernetes
+      shell:
+      cmd:
         - mkdir -p $HOME/.kube
         - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
         - chown $(id -u):$(id -g) $HOME/.kube/config
