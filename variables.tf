@@ -17,5 +17,5 @@ variable "instance-type" {
 # Number of K8S workers
 variable "worker-count" {
   type    = number
-  default = 2
+  default = 1
 }
