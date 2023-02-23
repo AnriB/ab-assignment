@@ -88,12 +88,11 @@
         remote_src: yes
 
     - name: enabling user to use kubernetes
-      shell:
-        args:
-          cmd: |
-            mkdir -p $HOME/.kube
-            cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-            chown $(id -u):$(id -g) $HOME/.kube/config
+      command: "{{ item }}"
+      with_items:
+      - mkdir -p $HOME/.kube
+      - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      - chown $(id -u):$(id -g) $HOME/.kube/config
 
     - name: install k8s cni plugin
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
