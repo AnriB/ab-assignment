@@ -82,13 +82,12 @@
         dest: /tmp/worker_join_command.sh
 
     - name: copy file to local machine
-      copy:
+      fetch:
         src: /tmp/worker_join_command.sh
         dest: /tmp/worker_join_command.sh
-        remote_src: yes
 
     - name: enabling user to use kubernetes
       shell: export KUBECONFIG=/etc/kubernetes/admin.conf
-      
+
     - name: install k8s cni plugin
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
