@@ -101,3 +101,14 @@
 
     - name: install k8s cni plugin
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+
+    # installing helm
+    - name: install helm from script
+      command: "{{ item }}"
+      with_items:
+        - cd ~
+        - curl -LO https://git.io/get_helm.sh
+        - chmod 700 get_helm.sh
+        - ./get_helm.sh
+        - export PATH="/usr/local/bin:$PATH"
+        - helm init
