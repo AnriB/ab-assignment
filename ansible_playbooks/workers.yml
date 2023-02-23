@@ -54,6 +54,12 @@
         gpgcheck: 1
         gpgkey: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
+    - name: bridge-nf-call-iptables
+      shell: echo 'net.bridge.bridge-nf-call-iptables = 1' > /etc/sysctl.conf
+    
+    - name: systctl
+      shell: sysctl -p
+      
     - name: install kubernetes control plane
       yum:
         name:
