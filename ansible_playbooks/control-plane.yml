@@ -9,7 +9,7 @@
       yum:
         name: "*"
         state: latest
-    
+
     # installing docker + additional require packages
     - name: required packages
       yum:
@@ -80,7 +80,12 @@
       copy:
         content: "{{ join_command.stdout }}"
         dest: /tmp/worker_join_command.sh
-    
+
+    - name: fetch file to local machine
+      fetch:
+        src: /tmp/worker_join_command.sh
+        dest: /tmp/worker_join_command.sh
+        
     - name: enabling user to use cluster
       command:
         - mkdir -p $HOME/.kube
