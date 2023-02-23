@@ -90,8 +90,8 @@
     - name: import the join command to a file on local server
       fetch:
         content: /tmp/join_command_variable
-        dest: /tmp/join_command_variable
-        flat: yes
+        dest: /tmp/
+        flat: true
 
     - name: enabling user to use kubernetes
       command: "{{ item }}"
