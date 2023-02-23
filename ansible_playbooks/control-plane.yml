@@ -69,6 +69,12 @@
         enabled: yes
         state: stopped
     
+    - name: bridge-nf-call-iptables
+      shell: echo 'net.bridge.bridge-nf-call-iptables = 1' > /etc/sysctl.conf
+    
+    - name: systctl
+      shell: sysctl -p
+      
     - name: initialize the control-plane
       command: kubeadm init
     
