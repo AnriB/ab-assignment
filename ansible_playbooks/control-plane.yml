@@ -80,3 +80,12 @@
       copy:
         content: "{{ join_command.stdout }}"
         dest: /tmp/worker_join_command.sh
+    
+    - name: enabling user to use cluster
+      command:
+        - mkdir -p $HOME/.kube
+        - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        - chown $(id -u):$(id -g) $HOME/.kube/config
+
+    - name: install k8s cni plugin
+      command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
