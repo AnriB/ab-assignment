@@ -83,14 +83,16 @@
       register: join_command
     
     - name: import join command
-      copy:
-        content: "{{ join_command.stdout }}"
-        dest: /worker_join_command
-    - name: copy file to local machine
-      fetch:
-        src: /worker_join_command
-        dest: /tmp/worker_join_command
+      set_fact:
+        join_command_variable: "{{ join_command.stdout }}"
+      delegate_to:localhost
 
+    - name: save variable to file
+      copy:
+        content: "{{ join_command_variable }}"
+        dest: "/tmp/join_command_variable"
+      delegate_to: localhost
+      
     - name: enabling user to use kubernetes
       command: "{{ item }}"
       with_items:
