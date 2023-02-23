@@ -41,7 +41,7 @@ resource "aws_instance" "workers" {
   key_name                    = aws_key_pair.control-key.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.workers_sg.id]
-  subnet_id                   = aws_subnet.subnet_2.id
+  subnet_id                   = aws_subnet.subnet_1.id
   tags = {
     Name = join("_", ["worker_instance", count.index + 1])
   }

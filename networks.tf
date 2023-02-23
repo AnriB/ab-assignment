@@ -25,12 +25,12 @@ resource "aws_subnet" "subnet_1" {
 
 
 # Create subnet #2
-resource "aws_subnet" "subnet_2" {
-  provider          = aws.default-region
-  vpc_id            = aws_vpc.vpc_default.id
-  availability_zone = element(data.aws_availability_zones.azs.names, 1)
-  cidr_block        = "10.0.2.0/24"
-}
+#resource "aws_subnet" "subnet_2" {
+#  provider          = aws.default-region
+#  vpc_id            = aws_vpc.vpc_default.id
+#  availability_zone = element(data.aws_availability_zones.azs.names, 1)
+#  cidr_block        = "10.0.2.0/24"
+#}
 
 
 # Creates IGW in default region

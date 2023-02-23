@@ -11,7 +11,7 @@ variable "region" {
 # EC2 instance type to create
 variable "instance-type" {
   type    = string
-  default = "t3.micro"
+  default = "t3.small"
 }
 
 # Number of K8S workers

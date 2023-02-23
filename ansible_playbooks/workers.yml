@@ -8,3 +8,62 @@
       yum:
         name: "*"
         state: latest
+   
+    # installing docker + additional require packages
+    - name: required packages
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: installing iproute-tc
+      yum:
+        name: iproute-tc
+        state: present    
+  
+    - name: install docker
+      yum:
+        name: docker
+        state: present
+    
+    - name: enable docker
+      systemd:
+        name: docker
+        state: stopped
+        enabled: yes
+
+    - name: setting docker cgdriver to systemd
+      copy:
+        src: "{{ playbook_dir }}/srv/docker-cgdriver"
+        dest: /etc/docker/daemon.json
+
+    - name: start docker
+      systemd:
+        name: docker
+        state: started
+
+    # Adding k8s to yum repo
+    - name: add kubernetes repo
+      yum_repository:
+        name: kubernetes
+        description: kubernetes repo
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+        enabled: 1
+        gpgcheck: 1
+        gpgkey: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+    - name: install kubernetes control plane
+      yum:
+        name:
+          - kubelet-1.23.0
+          - kubeadm-1.23.0
+          - kubectl-1.23.0
+        state: present
+    
+    - name: enable kubelet
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: stopped

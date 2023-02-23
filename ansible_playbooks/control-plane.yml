@@ -18,27 +18,65 @@
           - device-mapper-persistent-data
           - lvm2
         state: present
-    
-    - name: adding docker repository to yum
-      yum_repository:
-        name: docker-ce-stable
-        description: configuring yum for docker
-        baseurl: https://download.docker.com/linux/centos/docker-ce.repo
-        gpgcheck: yes
-        gpgkey: https://download.docker.com/linux/centos/gpg
-        enabled: yes
 
+    - name: installing iproute-tc
+      yum:
+        name: iproute-tc
+        state: present    
+  
     - name: install docker
       yum:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
+        name: docker
         state: present
     
-    - name: start and enable docker
+    - name: enable docker
+      systemd:
+        name: docker
+        state: stopped
+        enabled: yes
+
+    - name: setting docker cgdriver to systemd
+      copy:
+        src: "{{ playbook_dir }}/srv/docker-cgdriver"
+        dest: /etc/docker/daemon.json
+
+    - name: start docker
       systemd:
         name: docker
         state: started
-        enabled: yes
 
+    # Adding k8s to yum repo
+    - name: add kubernetes repo
+      yum_repository:
+        name: kubernetes
+        description: kubernetes repo
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+        enabled: 1
+        gpgcheck: 1
+        gpgkey: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+    - name: install kubernetes control plane
+      yum:
+        name:
+          - kubelet-1.23.0
+          - kubeadm-1.23.0
+          - kubectl-1.23.0
+        state: present
+    
+    - name: enable and start kubernetes
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: stopped
+    
+    - name: initialize the control-plane
+      command: kubeadm init
+    
+    - name: generate join
+      shell: kubeadm token create --print-join-command
+      register: join_command
+    
+    - name: import join command
+      copy:
+        content: "{{ join_command.stdout }}"
+        dest: /tmp/worker_join_command.sh
