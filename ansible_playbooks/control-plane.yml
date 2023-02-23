@@ -86,8 +86,7 @@
         src: /tmp/worker_join_command.sh
         dest: /tmp/worker_join_command.sh
         remote_src: yes
-
-    - name: enabling user to use cluster
+    - name: 
       command:
         - mkdir -p $HOME/.kube
         - cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
