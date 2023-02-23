@@ -106,8 +106,8 @@
     - name: install helm from script
       command: "{{ item }}"
       with_items:
-        - cd ~
+        - cd /root
         - wget https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz
         - tar -zxvf helm-v3.11.1-linux-amd64.tar.gz
-        - mv ~/linux-amd64/helm /usr/bin/
+        - mv /root/linux-amd64/helm /usr/bin/
         - helm init
