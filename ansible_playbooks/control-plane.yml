@@ -89,7 +89,7 @@
 
     - name: import the join command to a file on local server
       fetch:
-        content: /tmp/join_command_variable
+        src: /tmp/join_command_variable
         dest: /tmp/
         flat: true
 
@@ -107,8 +107,7 @@
       command: "{{ item }}"
       with_items:
         - cd ~
-        - curl -LO https://git.io/get_helm.sh
-        - chmod 700 get_helm.sh
-        - ./get_helm.sh
-        - export PATH="/usr/local/bin:$PATH"
+        - wget https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz
+        - tar -zxvf helm-*
+        - mv linux-amd64/helm /usr/bin
         - helm init
