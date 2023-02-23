@@ -81,11 +81,12 @@
         content: "{{ join_command.stdout }}"
         dest: /tmp/worker_join_command.sh
 
-    - name: fetch file to local machine
-      fetch:
+    - name: copy file to local machine
+      copy:
         src: /tmp/worker_join_command.sh
         dest: /tmp/worker_join_command.sh
-        
+        remote_src: yes
+
     - name: enabling user to use cluster
       command:
         - mkdir -p $HOME/.kube
