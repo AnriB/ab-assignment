@@ -32,7 +32,7 @@ resource "aws_instance" "control-plane" {
     ]
     connection {
       type = "ssh"
-      host = self.public_ip
+      host = ${self.public_ip}
       user = "ec2-user"
       private_key = file("~/.ssh/id_rsa.pub")
 
@@ -74,7 +74,7 @@ resource "aws_instance" "workers" {
     ]
     connection {
       type = "ssh"
-      host = self.public_ip
+      host = ${self.public_ip}
       user = "ec2-user"
       private_key = file("~/.ssh/id_rsa.pub")
 
