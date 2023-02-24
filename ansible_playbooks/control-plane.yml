@@ -108,8 +108,8 @@
     - name: modying PATH environmnet variable 
       copy:
         dest: /etc/profile.d/custom-path
-        content: 'PATH=$PATH:{{ extra_path: }}'
-        
+        content: 'PATH=$PATH:{{ extra_path }}'
+
     - name: install helm from script
       ignore_errors: true
       command: "{{ item }}"
