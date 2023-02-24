@@ -114,6 +114,7 @@
       ignore_errors: true
       command: "{{ item }}"
       with_items:
+        - source /etc/profile.d/custom-path
         - curl -LO https://git.io/get_helm.sh
         - chmod 700 /home/ec2-user/get_helm.sh
         - /home/ec2-user/get_helm.sh
