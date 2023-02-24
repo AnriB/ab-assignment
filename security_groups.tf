@@ -16,15 +16,8 @@ resource "aws_security_group" "control_plane_sg" {
 
   ingress {
     protocol = "icmp"
-    cidr_blocks = ["10.0.1.0/24"]
-    icmp_type = 8
-    icmp_code = -1
-  }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port = -1
+    to_port = 1
     cidr_blocks = ["10.0.1.0/24"]
   }
 
@@ -120,15 +113,8 @@ resource "aws_security_group" "workers_sg" {
 
   ingress {
     protocol = "icmp"
-    cidr_blocks = ["10.0.1.0/24"]
-    icmp_type = 8
-    icmp_code = -1
-  }
-
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port = -1
+    to_port = 1
     cidr_blocks = ["10.0.1.0/24"]
   }
 
