@@ -3,6 +3,8 @@
   become: yes
   remote_user: ec2-user
   become_user: root
+  vars:
+    extra_path: /usr/local/bin
   tasks:
     # server update 
     - name: Updating OS
@@ -103,7 +105,13 @@
       command: kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
 
     #installing helm
+    - name: modying PATH environmnet variable 
+      copy:
+        dest: /etc/profile.d/custom-path
+        content: 'PATH=$PATH:{{ extra_path: }}'
+        
     - name: install helm from script
+      ignore_errors: true
       command: "{{ item }}"
       with_items:
         - curl -LO https://git.io/get_helm.sh
