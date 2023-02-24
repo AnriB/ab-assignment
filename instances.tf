@@ -66,8 +66,8 @@ resource "aws_instance" "workers" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo echo '${self.private_ip} ${aws_instance.workers.tags.Name}'",
-      "sudo hostnamectl set-hostname ${aws_instance.workers.tags.Name}"
+      "sudo echo '${self.private_ip} ${aws_instance.workers[count.index + 1].tags.Name}'",
+      "sudo hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}"
     ]
     connection {
       type = "ssh"
