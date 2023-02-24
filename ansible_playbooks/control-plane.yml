@@ -106,8 +106,6 @@
 
     #installing helm
     - name: modying PATH environmnet variable 
-      become: true
-      become_user: root
       copy:
         dest: /etc/profile.d/custom-path
         content: 'PATH=$PATH:{{ extra_path }}'
