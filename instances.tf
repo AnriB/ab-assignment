@@ -24,10 +24,10 @@ resource "aws_instance" "control-plane" {
   tags = {
     Name = "control_plane_instance"
   }
-  
+
   provisioner "remote-exec" {
     inline = [
-      "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'"
+      "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'",
       "hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
     ]
     connection {
@@ -63,7 +63,7 @@ resource "aws_instance" "workers" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo echo '${self.private_ip} ${aws_instance.workers.tags.Name}'"
+      "sudo echo '${self.private_ip} ${aws_instance.workers.tags.Name}'",
       "sudo hostnamectl set-hostname ${aws_instance.workers.tags.Name}"
     ]
     connection {
