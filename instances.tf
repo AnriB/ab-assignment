@@ -33,7 +33,7 @@ resource "aws_instance" "control-plane" {
     connection {
       type = "ssh"
       user = "ec2-user"
-      private_key = file(~/.ssh/id_rsa.pub)
+      private_key = file("~/.ssh/id_rsa.pub")
     }
   }
 
@@ -69,7 +69,7 @@ resource "aws_instance" "workers" {
     connection {
       type = "ssh"
       user = "ec2-user"
-      private_key = file(~/.ssh/id_rsa.pub)
+      private_key = file("~/.ssh/id_rsa.pub")
     }
   }
 
