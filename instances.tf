@@ -28,9 +28,8 @@ resource "aws_instance" "control-plane" {
   provisioner "remote-exec" {
     inline = [
       "sudo sleep 30",
-      "sudo su -",
       "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}' | sudo tee -a /etc/hosts",
-      "hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
+      "sudo hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
     ]
     connection {
       type = "ssh"
@@ -70,7 +69,7 @@ resource "aws_instance" "workers" {
     inline = [
       "sudo sleep 30",
       "echo '${self.private_ip} ${aws_instance.workers[count.index + 1].tags.Name}' | sudo tee -a /etc/hosts",
-      "hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}"
+      "sudo hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}"
     ]
     connection {
       type = "ssh"
