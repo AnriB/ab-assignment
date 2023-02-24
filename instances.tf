@@ -34,7 +34,7 @@ resource "aws_instance" "control-plane" {
       type = "ssh"
       host = self.public_ip
       user = "ec2-user"
-      private_key = file("~/.ssh/id_rsa.pub")
+      private_key = file("/root/.ssh/id_rsa.pub")
 
       timeout = "5m"
     }
@@ -73,7 +73,7 @@ resource "aws_instance" "workers" {
       type = "ssh"
       host = self.public_ip
       user = "ec2-user"
-      private_key = file("~/.ssh/id_rsa.pub")
+      private_key = file("/root/.ssh/id_rsa.pub")
 
       timeout = "5m"
     }
