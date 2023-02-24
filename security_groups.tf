@@ -12,6 +12,22 @@ resource "aws_security_group" "control_plane_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # allow ping only within the subnet
+
+  ingress {
+    protcol = "icmp"
+    cidr_block = ["10.0.1.0/24"]
+    icmp_type = 8
+    icmp_code = -1
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["10.0.1.0/24"]
+  }
+
   # Kubernetes requirements per > https://kubernetes.io/docs/reference/networking/ports-and-protocols/
 
   ingress {
@@ -98,6 +114,22 @@ resource "aws_security_group" "workers_sg" {
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # allow ping only within the subnet
+
+  ingress {
+    protcol = "icmp"
+    cidr_block = ["10.0.1.0/24"]
+    icmp_type = 8
+    icmp_code = -1
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["10.0.1.0/24"]
   }
 
   # Kubernetes requirements per > https://kubernetes.io/docs/reference/networking/ports-and-protocols/
