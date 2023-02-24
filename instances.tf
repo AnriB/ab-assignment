@@ -27,8 +27,8 @@ resource "aws_instance" "control-plane" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'",
-      "hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}",
+      "sudo echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'",
+      "sudo hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}",
       "sudo systemctl restart polkit"
     ]
     connection {
