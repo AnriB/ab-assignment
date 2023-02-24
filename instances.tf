@@ -25,6 +25,13 @@ resource "aws_instance" "control-plane" {
     Name = "control_plane_instance"
   }
 
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/control-plane.yml -v > /var/log/control-plane.log
+  EOF
+  }
+
   provisioner "remote-exec" {
     inline = [
       "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'",
@@ -38,13 +45,6 @@ resource "aws_instance" "control-plane" {
 
       timeout = "5m"
     }
-  }
-
-  provisioner "local-exec" {
-    command = <<EOF
-  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
-  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/control-plane.yml -v > /var/log/control-plane.log
-  EOF
   }
 }
 
@@ -64,10 +64,17 @@ resource "aws_instance" "workers" {
 
   depends_on = [aws_instance.control-plane]
 
+  provisioner "local-exec" {
+    command = <<EOF
+  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
+  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/workers.yml -v > /var/log/worker.log
+  EOF
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo echo '${self.private_ip} ${aws_instance.workers[count.index + 1].tags.Name}'",
-      "sudo hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}"
+      "sudo hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}",
     ]
     connection {
       type = "ssh"
@@ -79,10 +86,4 @@ resource "aws_instance" "workers" {
     }
   }
 
-  provisioner "local-exec" {
-    command = <<EOF
-  aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
-  ansible-playbook --extra-vars 'passing_hosts=tag_Name_${self.tags.Name}' ansible_playbooks/workers.yml -v > /var/log/worker.log
-  EOF
-  }
 }
