@@ -15,8 +15,8 @@ resource "aws_security_group" "control_plane_sg" {
   # allow ping only within the subnet
 
   ingress {
-    protcol = "icmp"
-    cidr_block = ["10.0.1.0/24"]
+    protocol = "icmp"
+    cidr_blocks = ["10.0.1.0/24"]
     icmp_type = 8
     icmp_code = -1
   }
@@ -119,8 +119,8 @@ resource "aws_security_group" "workers_sg" {
   # allow ping only within the subnet
 
   ingress {
-    protcol = "icmp"
-    cidr_block = ["10.0.1.0/24"]
+    protocol = "icmp"
+    cidr_blocks = ["10.0.1.0/24"]
     icmp_type = 8
     icmp_code = -1
   }
