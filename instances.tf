@@ -24,6 +24,19 @@ resource "aws_instance" "control-plane" {
   tags = {
     Name = "control_plane_instance"
   }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}'"
+      "hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
+    ]
+    connection {
+      type = "ssh"
+      user = "ec2-user"
+      private_key = file(~/.ssh/id_rsa.pub)
+    }
+  }
+
   provisioner "local-exec" {
     command = <<EOF
   aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
@@ -45,7 +58,21 @@ resource "aws_instance" "workers" {
   tags = {
     Name = join("_", ["worker_instance", count.index + 1])
   }
+
   depends_on = [aws_instance.control-plane]
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo echo '${self.private_ip} ${aws_instance.workers.tags.Name}'"
+      "sudo hostnamectl set-hostname ${aws_instance.workers.tags.Name}"
+    ]
+    connection {
+      type = "ssh"
+      user = "ec2-user"
+      private_key = file(~/.ssh/id_rsa.pub)
+    }
+  }
+
   provisioner "local-exec" {
     command = <<EOF
   aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
