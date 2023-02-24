@@ -27,8 +27,8 @@ resource "aws_instance" "control-plane" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sleep 180",
-      "sudo systemctl restart polkit",
+      "sudo sleep 120",
+      "sudo chmod 644 /etc/hosts",
       "sudo echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}' >> /etc/hosts",
       "sudo hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
     ]
@@ -68,8 +68,8 @@ resource "aws_instance" "workers" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo sleep 180",
-      "sudo systemctl restart polkit",
+      "sudo sleep 120",
+      "sudo chmod 644 /etc/hosts",
       "sudo echo '${self.private_ip} ${aws_instance.workers[count.index + 1].tags.Name}' >> /etc/hosts",
       "sudo hostnamectl set-hostname ${aws_instance.workers[count.index + 1].tags.Name}"
     ]
