@@ -22,7 +22,7 @@ resource "aws_instance" "control-plane" {
   vpc_security_group_ids      = [aws_security_group.control_plane_sg.id]
   subnet_id                   = aws_subnet.subnet_1.id
   tags = {
-    Name = "control_plane_instance"
+    Name = "control-plane-instance"
   }
 
   provisioner "remote-exec" {
@@ -60,7 +60,7 @@ resource "aws_instance" "workers" {
   vpc_security_group_ids      = [aws_security_group.workers_sg.id]
   subnet_id                   = aws_subnet.subnet_1.id
   tags = {
-    Name = join("_", ["worker_instance", count.index + 1])
+    Name = join("-", ["worker-instance", count.index + 1])
   }
 
   depends_on = [aws_instance.control-plane]
