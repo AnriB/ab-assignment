@@ -37,9 +37,6 @@ resource "aws_instance" "control-plane" {
       private_key = file("~/.ssh/id_rsa.pub")
 
       timeout = "5m"
-      sleep = "15s"
-      retries = 20
-      wait_for_ssh = true
     }
   }
 
@@ -79,9 +76,6 @@ resource "aws_instance" "workers" {
       private_key = file("~/.ssh/id_rsa.pub")
 
       timeout = "5m"
-      sleep = "15s"
-      retries = 20
-      wait_for_ssh = true
     }
   }
 
