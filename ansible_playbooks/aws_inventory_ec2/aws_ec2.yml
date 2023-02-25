@@ -6,13 +6,9 @@ regions:
   - us-east-1
 strict: false
 keyed_groups:
-  - key: tags
-    prefix: tag
   - key: tags.Name
-    delimiter: '-'
-    prefix: 'tag-Name'
+    separator: ""
+    prefix: "tag-Name-"
 hostnames:
   - ip-address
   - tag:Name
-    delimiter: '-'
-    prefix: 'tag-Name-'
