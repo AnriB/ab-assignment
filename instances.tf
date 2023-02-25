@@ -28,8 +28,8 @@ resource "aws_instance" "control-plane" {
   provisioner "remote-exec" {
     inline = [
       "sudo sleep 30",
-      "sudo export IP=${self.private_ip}",
-      "sudo export HST=${aws_instance.control-plane.tags.Name}",
+      "export IP=${self.private_ip}",
+      "export HST=${aws_instance.control-plane.tags.Name}",
       "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
       "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
@@ -70,8 +70,8 @@ resource "aws_instance" "workers" {
   provisioner "remote-exec" {
     inline = [
       "sudo sleep 30",
-      "sudo export IP=${self.private_ip}",
-      "sudo export HST=${aws_instance.workers[count.index].tags.Name}",
+      "export IP=${self.private_ip}",
+      "export HST=${aws_instance.workers[count.index].tags.Name}",
       "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
       "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
