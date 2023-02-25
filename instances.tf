@@ -60,7 +60,7 @@ resource "aws_instance" "workers" {
   vpc_security_group_ids      = [aws_security_group.workers_sg.id]
   subnet_id                   = aws_subnet.subnet_1.id
   tags = {
-    Name = join("-", ["worker_instance", count.index + 1])
+    Name = join("_", ["worker_instance", count.index + 1])
   }
 
   depends_on = [aws_instance.control-plane]
