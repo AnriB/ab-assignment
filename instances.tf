@@ -28,8 +28,10 @@ resource "aws_instance" "control-plane" {
   provisioner "remote-exec" {
     inline = [
       "sudo sleep 30",
-      "echo '${self.private_ip} ${aws_instance.control-plane.tags.Name}' | sed 's/_/-/g' | sudo tee -a /etc/hosts",
-      "sudo hostnamectl set-hostname ${aws_instance.control-plane.tags.Name}"
+      "sudo export IP=${self.private_ip}",
+      "sudo export HST=${aws_instance.control-plane.tags.Name}"
+      "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
+      "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
     connection {
       type = "ssh"
@@ -68,8 +70,10 @@ resource "aws_instance" "workers" {
   provisioner "remote-exec" {
     inline = [
       "sudo sleep 30",
-      "echo '${self.private_ip} ${aws_instance.workers[count.index].tags.Name}' | sed 's/_/-/g' | sudo tee -a /etc/hosts",
-      "sudo hostnamectl set-hostname ${aws_instance.workers[count.index].tags.Name}"
+      "sudo export IP=${self.private_ip}",
+      "sudo export HST=${aws_instance.workers[count.index].tags.Name}"
+      "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
+      "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
     connection {
       type = "ssh"
