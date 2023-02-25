@@ -34,9 +34,9 @@ resource "aws_instance" "control-plane" {
       "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
     connection {
-      type = "ssh"
-      host = self.public_ip
-      user = "ec2-user"
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ec2-user"
       private_key = file("~/.ssh/id_rsa")
 
       timeout = "5m"
@@ -76,9 +76,9 @@ resource "aws_instance" "workers" {
       "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
     ]
     connection {
-      type = "ssh"
-      host = self.public_ip
-      user = "ec2-user"
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ec2-user"
       private_key = file("~/.ssh/id_rsa")
 
       timeout = "5m"
