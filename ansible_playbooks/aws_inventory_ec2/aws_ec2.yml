@@ -13,6 +13,6 @@ keyed_groups:
     prefix: 'tag-Name'
 hostnames:
   - ip-address
-  - dns-name
   - tag:Name
-
+    delimiter: '-'
+    prefix: 'tag-Name-'
