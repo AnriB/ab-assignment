@@ -7,8 +7,8 @@ regions:
 strict: false
 keyed_groups:
   - key: tags.Name
-    separator: ""
-    prefix: "tag-Name-"
+    separator: "-"
+    prefix: "tag-Name"
 hostnames:
   - ip-address
   - tag:Name
