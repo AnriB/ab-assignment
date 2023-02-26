@@ -1,3 +1,8 @@
-### Terraform ###
-# Local .terraform directories
-**/.terraform/*
+# Ignore Terraform files
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfvars
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
