@@ -6,7 +6,9 @@ pipeline {
         DOCKER_REGISTRY_CREDENTIALS = credentials("mydockercredentials-id")
         DOCKER_IMAGE_NAME = "hello-world-java"
         DOCKER_IMAGE_TAG = "latest"
+        REPO_HOOK_SECRET = credentials("hello-world-java-secret")
     }
+
     stages {
         stage('Clone repository') {
             steps {
@@ -31,5 +33,11 @@ pipeline {
                 }
             }
         }
+    
+    triggers {
+        githubPush(
+            events: ['push']
+            secret: env.REPO_HOOK_SECRET
+        )
     }
 }
