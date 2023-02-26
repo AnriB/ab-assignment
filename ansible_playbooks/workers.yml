@@ -3,6 +3,8 @@
   become: yes
   remote_user: ec2-user
   become_user: root
+  vars:
+    kubernetes_join_token: "{{ lookup('file', '/tmp/join_command_variable') }}"
   tasks:
     - name: Updating OS
       yum:
@@ -73,3 +75,6 @@
         name: kubelet
         enabled: yes
         state: stopped
+
+    - name: join control plane node
+      shell: "{{ kubernetes_join_token }}"
