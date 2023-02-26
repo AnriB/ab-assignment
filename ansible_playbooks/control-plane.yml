@@ -65,7 +65,7 @@
           - kubectl-1.23.0
         state: present
     
-    - name: enable and start kubernetes
+    - name: enable kubernetes
       systemd:
         name: kubelet
         enabled: yes
@@ -89,7 +89,7 @@
         content: "{{ join_command.stdout }}"
         dest: /tmp/join_command_variable
 
-    - name: import the join command to a file on local server
+    - name: import the join command to a file on local machine
       fetch:
         src: /tmp/join_command_variable
         dest: /tmp/
