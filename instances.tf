@@ -67,29 +67,24 @@ resource "aws_instance" "workers" {
 
   depends_on = [aws_instance.control-plane]
 
-  resource "null_resource" "workers" {
-    
-    count = var.worker-count
+  provisioner "remote-exec" {
+    inline = [
+      "sudo sleep 30",
+      "export IP=${self.private_ip}",
+      "export HST=${aws_instance.workers[count.index].tags.Name}",
+      "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
+      "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
+    ]
+    connection {
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ec2-user"
+      private_key = file("~/.ssh/id_rsa")
 
-    provisioner "remote-exec" {
-      inline = [
-        "sudo sleep 30",
-        "export IP=${self.private_ip}",
-        "export HST=${aws_instance.workers[count.index].tags.Name}",
-        "echo $IP $HST | sed 's/_/-/g' | sudo tee -a /etc/hosts",
-        "sudo hostnamectl set-hostname $(echo $HST | sed 's/_/-/g')"
-      ]
-      connection {
-        type        = "ssh"
-        host        = self.public_ip
-        user        = "ec2-user"
-        private_key = file("~/.ssh/id_rsa")
-
-        timeout = "5m"
-      }
+      timeout = "5m"
     }
   }
-
+  
   provisioner "local-exec" {
     command = <<EOF
   aws --profile ${var.profile} ec2 wait instance-status-ok --region ${var.region} --instance-ids ${self.id}
